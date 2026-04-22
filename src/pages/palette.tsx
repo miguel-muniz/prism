@@ -1,4 +1,3 @@
-import {MarkGithubIcon} from '@primer/octicons-react'
 import {Box, Text, Label} from '@primer/react'
 import {mix, readableColor} from 'color2k'
 import React from 'react'
@@ -79,9 +78,8 @@ export function Palette() {
           }}
         >
           <Text sx={{display: 'flex', alignItems: 'center'}}>
-            <MarkGithubIcon size={32} />
-            <Text as="h1" sx={{m: 0, mx: 2, fontSize: 3, fontWeight: 'bold'}}>
-              Primer Prism
+            <Text as="h1" sx={{m: 0, fontSize: 3, fontWeight: 'bold'}}>
+              Prism
             </Text>
             <Label
               sx={{

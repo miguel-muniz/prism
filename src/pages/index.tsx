@@ -1,14 +1,5 @@
-import {LinkExternalIcon, MarkGithubIcon, PlusIcon, TrashIcon} from '@primer/octicons-react'
-import {
-  Box,
-  Button,
-  Heading,
-  IconButton as PrimerIconButton,
-  Label,
-  Link as PrimerLink,
-  StyledOcticon,
-  Text
-} from '@primer/react'
+import {PlusIcon, TrashIcon} from '@primer/octicons-react'
+import {Box, Button, Heading, IconButton as PrimerIconButton, Label, Text} from '@primer/react'
 import {mix, readableColor} from 'color2k'
 import {Link} from 'react-router-dom'
 import {IconButton} from '../components/button'
@@ -30,23 +21,12 @@ export function Index() {
         }}
       >
         <Box sx={{display: 'flex', alignItems: 'center'}}>
-          <MarkGithubIcon size={32} />
-          <Box as="h1" sx={{m: 0, mx: 2, fontSize: 3, fontWeight: 'bold'}}>
-            Primer Prism
+          <Box as="h1" sx={{m: 0, fontSize: 3, fontWeight: 'bold'}}>
+            Prism
           </Box>
           <Label variant="attention">Experimental</Label>
         </Box>
         <Box sx={{display: 'flex', alignItems: 'center'}}>
-          <PrimerLink
-            muted
-            href="https://github.com/primer/prism"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{mr: 4, '&:hover': {textDecoration: 'underline'}}}
-          >
-            GitHub
-            <StyledOcticon icon={LinkExternalIcon} sx={{marginLeft: 1}} />
-          </PrimerLink>
           <PrimerIconButton
             aria-label="Create new palette"
             icon={PlusIcon}
@@ -192,7 +172,7 @@ export function Index() {
               Welcome
             </Heading>
             <Text sx={{marginBottom: 5, fontSize: 3, color: 'fg.muted'}}>
-              Primer Prism is a tool for creating cohesive, consistent, and accessible color palettes
+              Prism is a tool for creating cohesive, consistent, and accessible color palettes
             </Text>
             <Button variant="primary" size="large" onClick={() => send('CREATE_PALETTE')}>
               Create new palette
