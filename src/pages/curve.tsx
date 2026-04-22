@@ -1,5 +1,5 @@
-import {Link, navigate, RouteComponentProps} from '@reach/router'
 import React from 'react'
+import {Link, useNavigate, useParams} from 'react-router-dom'
 import {ApplyEasingFunction} from '../components/apply-easing-function'
 import {Button} from '../components/button'
 import {CurveEditor} from '../components/curve-editor'
@@ -18,16 +18,18 @@ const ranges = {
   lightness: {min: 0, max: 100}
 }
 
-export function Curve({paletteId = '', curveId = ''}: RouteComponentProps<{paletteId: string; curveId: string}>) {
+export function Curve() {
+  const navigate = useNavigate()
+  const {paletteId = '', curveId = ''} = useParams<{paletteId: string; curveId: string}>()
   const [state, send] = useGlobalState()
   const palette = state.context.palettes[paletteId]
-  const curve = palette.curves[curveId]
+  const curve = palette?.curves[curveId]
   const scales = React.useMemo(
-    () => Object.values(palette.scales).filter(scale => Object.values(scale.curves).includes(curveId)),
+    () => (palette ? Object.values(palette.scales).filter(scale => Object.values(scale.curves).includes(curveId)) : []),
     [palette, curveId]
   )
 
-  if (!curve) {
+  if (!palette || !curve) {
     return (
       <div style={{padding: 16}}>
         <p style={{marginTop: 0}}>Curve not found</p>

@@ -1,8 +1,8 @@
 import {MarkGithubIcon} from '@primer/octicons-react'
 import {Box, Text, Label} from '@primer/react'
-import {Link, navigate, RouteComponentProps} from '@reach/router'
 import {mix, readableColor} from 'color2k'
 import React from 'react'
+import {Link, Outlet, useNavigate, useParams} from 'react-router-dom'
 import styled from 'styled-components'
 import {Button, IconButton} from '../components/button'
 import {ExportScales} from '../components/export-scales'
@@ -43,7 +43,9 @@ const Main = styled.main`
   }
 `
 
-export function Palette({paletteId = '', children}: React.PropsWithChildren<RouteComponentProps<{paletteId: string}>>) {
+export function Palette() {
+  const navigate = useNavigate()
+  const {paletteId = ''} = useParams<{paletteId: string}>()
   const [state, send] = useGlobalState()
   const palette = state.context.palettes[paletteId]
 
@@ -344,7 +346,9 @@ export function Palette({paletteId = '', children}: React.PropsWithChildren<Rout
           </VStack>
         </SidebarPanel>
       </div>
-      <Main>{children}</Main>
+      <Main>
+        <Outlet />
+      </Main>
     </Wrapper>
   )
 }

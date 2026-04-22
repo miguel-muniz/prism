@@ -26,11 +26,14 @@ git clone git@github.com:primer/prism.git
 # Go to the project directory
 cd prism
 
+# Use the current Node.js LTS release
+nvm use 24
+
 # Install dependencies
-yarn
+npm install
 
 # Start the development server
-yarn start
+npm start
 ```
 
 ## Prior art
@@ -44,5 +47,4 @@ Primer Prism builds on the ideas in many existing color tools:
 - [Leonardo by Adobe](https://leonardocolor.io/theme.html)
 - [Palx by Brent Jackson](https://palx.jxnblk.com/)
 - [Scale by Hayk An](https://hihayk.github.io/scale)
-
 

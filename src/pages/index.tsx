@@ -9,14 +9,14 @@ import {
   StyledOcticon,
   Text
 } from '@primer/react'
-import {Link, RouteComponentProps} from '@reach/router'
 import {mix, readableColor} from 'color2k'
+import {Link} from 'react-router-dom'
 import {IconButton} from '../components/button'
 import {routePrefix} from '../constants'
 import {useGlobalState} from '../global-state'
 import {colorToHex, getColor} from '../utils'
 
-export function Index(props: RouteComponentProps) {
+export function Index() {
   const [state, send] = useGlobalState()
   return (
     <div>

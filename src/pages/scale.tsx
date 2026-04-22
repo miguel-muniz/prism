@@ -1,8 +1,8 @@
 import {CheckCircleFillIcon, DashIcon, PlusIcon, XCircleIcon} from '@primer/octicons-react'
 import {Box, ButtonGroup, Text} from '@primer/react'
-import {Link, navigate, RouteComponentProps} from '@reach/router'
 import {getContrast} from 'color2k'
 import React from 'react'
+import {Link, useNavigate, useParams} from 'react-router-dom'
 import {Button, IconButton} from '../components/button'
 import {Color} from '../components/color'
 import {CurveEditor} from '../components/curve-editor'
@@ -16,14 +16,13 @@ import {useGlobalState} from '../global-state'
 import {Curve} from '../types'
 import {colorToHex, getColor, getContrastScore, getRange} from '../utils'
 
-export function Scale({
-  paletteId = '',
-  scaleId = ''
-}: React.PropsWithChildren<RouteComponentProps<{paletteId: string; scaleId: string}>>) {
+export function Scale() {
+  const navigate = useNavigate()
+  const {paletteId = '', scaleId = ''} = useParams<{paletteId: string; scaleId: string}>()
   const [selectedIndex, setIndex] = React.useState('0')
   const [state, send] = useGlobalState()
   const palette = state.context.palettes[paletteId]
-  const scale = palette.scales[scaleId]
+  const scale = palette?.scales[scaleId]
   // TODO: allow resizing
   const [visibleCurves, setVisibleCurves] = React.useState({
     hue: true,
@@ -31,7 +30,7 @@ export function Scale({
     lightness: true
   })
 
-  if (!scale) {
+  if (!palette || !scale) {
     return (
       <div style={{padding: 16}}>
         <p style={{marginTop: 0}}>Scale not found</p>

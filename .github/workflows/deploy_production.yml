@@ -17,7 +17,7 @@ jobs:
     name: Deploy
     uses: primer/.github/.github/workflows/deploy.yml@v1.0.0
     with:
-      node_version: 16
-      install: yarn
-      build: yarn build
+      node_version: 24
+      install: npm ci
+      build: npm run build
       output_dir: build

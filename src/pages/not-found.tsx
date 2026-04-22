@@ -1,8 +1,8 @@
-import {Link, RouteComponentProps} from '@reach/router'
 import React from 'react'
+import {Link} from 'react-router-dom'
 import {routePrefix} from '../constants'
 
-export function NotFound(props: RouteComponentProps) {
+export function NotFound() {
   return (
     <div style={{padding: 16}}>
       <p style={{marginTop: 0}}>Page not found</p>

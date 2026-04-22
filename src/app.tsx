@@ -1,10 +1,11 @@
 import {BaseStyles, themeGet} from '@primer/react'
-import {Router} from '@reach/router'
 import React from 'react'
 import {useHotkeys} from 'react-hotkeys-hook'
+import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import {createGlobalStyle} from 'styled-components'
 import {routePrefix} from './constants'
 import {useGlobalState} from './global-state'
+import {NavigationProvider} from './navigation'
 import {Index} from './pages'
 import {Curve} from './pages/curve'
 import {NotFound} from './pages/not-found'
@@ -26,14 +27,17 @@ export function App() {
   return (
     <BaseStyles>
       <GlobalStyles />
-      <Router>
-        <Index path={`${routePrefix}/`} />
-        <Palette path={`${routePrefix}/local/:paletteId`}>
-          <Scale path="scale/:scaleId"></Scale>
-          <Curve path="curve/:curveId"></Curve>
-        </Palette>
-        <NotFound default />
-      </Router>
+      <BrowserRouter>
+        <NavigationProvider />
+        <Routes>
+          <Route path={`${routePrefix}/`} element={<Index />} />
+          <Route path={`${routePrefix}/local/:paletteId`} element={<Palette />}>
+            <Route path="scale/:scaleId" element={<Scale />} />
+            <Route path="curve/:curveId" element={<Curve />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
     </BaseStyles>
   )
 }

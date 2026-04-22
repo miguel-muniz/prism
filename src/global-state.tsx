@@ -1,11 +1,11 @@
-import {navigate} from '@reach/router'
 import {assign} from '@xstate/immer'
 import {useInterpret, useService} from '@xstate/react'
 import bezier from 'bezier-easing'
 import {isArray, keyBy} from 'lodash-es'
 import React from 'react'
+import {navigate} from './navigation'
 import {v4 as uniqueId} from 'uuid'
-import {interpret, Machine} from 'xstate'
+import {interpret, Interpreter, Machine} from 'xstate'
 import cssColorNames from './css-color-names.json'
 import exampleScales from './example-scales.json'
 import {Color, Curve, Palette, Scale} from './types'
@@ -427,12 +427,12 @@ const machine = Machine<MachineContext, MachineEvent>({
   }
 })
 
-const GlobalStateContext = React.createContext(interpret(machine))
+const GlobalStateContext = React.createContext<Interpreter<MachineContext, any, MachineEvent, any> | null>(null)
 
 export function GlobalStateProvider({children}: React.PropsWithChildren<{}>) {
   const initialState = React.useMemo(() => getPersistedState() ?? machine.initialState, [])
 
-  const service = useInterpret(machine, {state: initialState, devTools: true}, state => {
+  const service = useInterpret<MachineContext, MachineEvent>(machine, {state: initialState, devTools: true}, state => {
     localStorage.setItem(GLOBAL_STATE_KEY, JSON.stringify(state))
   })
 
@@ -440,7 +440,13 @@ export function GlobalStateProvider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useGlobalState() {
-  return useService(React.useContext(GlobalStateContext))
+  const service = React.useContext(GlobalStateContext)
+
+  if (!service) {
+    throw new Error('useGlobalState must be used within a GlobalStateProvider')
+  }
+
+  return useService<MachineContext, MachineEvent>(service)
 }
 
 function getPersistedState(): typeof machine.initialState | null {
