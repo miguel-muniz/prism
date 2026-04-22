@@ -1,5 +1,5 @@
 import {PlusIcon, TrashIcon} from '@primer/octicons-react'
-import {Box, Button, Heading, IconButton as PrimerIconButton, Label, Text} from '@primer/react'
+import {Box, Button, Heading, IconButton as PrimerIconButton, Text} from '@primer/react'
 import {mix, readableColor} from 'color2k'
 import {Link} from 'react-router-dom'
 import {IconButton} from '../components/button'
@@ -24,7 +24,6 @@ export function Index() {
           <Box as="h1" sx={{m: 0, fontSize: 3, fontWeight: 'bold'}}>
             Prism
           </Box>
-          <Label variant="attention">Experimental</Label>
         </Box>
         <Box sx={{display: 'flex', alignItems: 'center'}}>
           <PrimerIconButton

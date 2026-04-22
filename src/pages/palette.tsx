@@ -1,4 +1,4 @@
-import {Box, Text, Label} from '@primer/react'
+import {Box, Text} from '@primer/react'
 import {mix, readableColor} from 'color2k'
 import React from 'react'
 import {Link, Outlet, useNavigate, useParams} from 'react-router-dom'
@@ -81,14 +81,6 @@ export function Palette() {
             <Text as="h1" sx={{m: 0, fontSize: 3, fontWeight: 'bold'}}>
               Prism
             </Text>
-            <Label
-              sx={{
-                color: 'var(--color-text)',
-                borderColor: 'var(--color-text)'
-              }}
-            >
-              Experimental
-            </Label>
           </Text>
         </Link>
 
