@@ -42,7 +42,7 @@ export function Color({paletteId = '', scaleId = '', index = ''}: {paletteId: st
               type="number"
               style={{width: '100%'}}
               value={color.hue}
-              min={0}
+              min={scale.curves.hue ? undefined : 0}
               max={360}
               onChange={event => {
                 send({
@@ -66,7 +66,7 @@ export function Color({paletteId = '', scaleId = '', index = ''}: {paletteId: st
               type="number"
               style={{width: '100%'}}
               value={color.saturation}
-              min={0}
+              min={scale.curves.saturation ? undefined : 0}
               max={100}
               onChange={event => {
                 send({
@@ -90,7 +90,7 @@ export function Color({paletteId = '', scaleId = '', index = ''}: {paletteId: st
               type="number"
               style={{width: '100%'}}
               value={color.lightness}
-              min={0}
+              min={scale.curves.lightness ? undefined : 0}
               max={100}
               onChange={event => {
                 send({
