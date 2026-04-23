@@ -1,0 +1,8 @@
+[build]
+  command = "tsc --noEmit && vite build --base=/"
+  publish = "build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
