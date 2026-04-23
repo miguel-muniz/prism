@@ -79,7 +79,7 @@ export function Palette() {
         >
           <Text sx={{display: 'flex', alignItems: 'center'}}>
             <Text as="h1" sx={{m: 0, fontSize: 3, fontWeight: 'bold'}}>
-              Prism
+              Prism+
             </Text>
           </Text>
         </Link>

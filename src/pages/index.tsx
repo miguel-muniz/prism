@@ -22,7 +22,7 @@ export function Index() {
       >
         <Box sx={{display: 'flex', alignItems: 'center'}}>
           <Box as="h1" sx={{m: 0, fontSize: 3, fontWeight: 'bold'}}>
-            Prism
+            Prism+
           </Box>
         </Box>
         <Box sx={{display: 'flex', alignItems: 'center'}}>
