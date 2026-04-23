@@ -433,7 +433,10 @@ export function GlobalStateProvider({children}: React.PropsWithChildren<{}>) {
   const initialState = React.useMemo(() => getPersistedState() ?? machine.initialState, [])
 
   const service = useInterpret<MachineContext, MachineEvent>(machine, {state: initialState, devTools: true}, state => {
-    localStorage.setItem(GLOBAL_STATE_KEY, JSON.stringify(state))
+    // Only persist the current palettes, not the entire state with undo/redo history.
+    // The past/future arrays are session-only and should not be stored in localStorage.
+    const {past, future, ...persistentContext} = state.context
+    localStorage.setItem(GLOBAL_STATE_KEY, JSON.stringify({...state, context: persistentContext}))
   })
 
   return <GlobalStateContext.Provider value={service}>{children}</GlobalStateContext.Provider>
@@ -451,7 +454,16 @@ export function useGlobalState() {
 
 function getPersistedState(): typeof machine.initialState | null {
   try {
-    return JSON.parse(localStorage.getItem(GLOBAL_STATE_KEY) ?? '')
+    const persisted = JSON.parse(localStorage.getItem(GLOBAL_STATE_KEY) ?? '')
+    // Restore persisted state with empty undo/redo history (history is session-only)
+    return {
+      ...persisted,
+      context: {
+        ...persisted.context,
+        past: [],
+        future: []
+      }
+    }
   } catch (e) {
     return null
   }
