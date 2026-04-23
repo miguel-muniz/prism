@@ -1,14 +1,14 @@
 import {assign} from '@xstate/immer'
 import {useInterpret, useService} from '@xstate/react'
-import bezier from 'bezier-easing'
 import {isArray, keyBy} from 'lodash-es'
 import React from 'react'
 import {navigate} from './navigation'
 import {v4 as uniqueId} from 'uuid'
 import {interpret, Interpreter, Machine} from 'xstate'
 import cssColorNames from './css-color-names.json'
+import {createEasingFunction} from './easings'
 import {PRESET_PALETTES} from './preset-palettes'
-import {Color, Curve, Palette, Scale} from './types'
+import {Color, Curve, CurveEasing, Palette, Scale} from './types'
 import {getColor, hexToColor, randomIntegerInRange, lerp} from './utils'
 import {routePrefix} from './constants'
 
@@ -133,7 +133,7 @@ type MachineEvent =
       type: 'APPLY_EASING_FUNCTION'
       paletteId: string
       curveId: string
-      easingFunction: bezier.EasingFunction
+      easing: CurveEasing
     }
   | {type: 'UNDO'}
   | {type: 'REDO'}
@@ -424,14 +424,16 @@ const machine = Machine<MachineContext, MachineEvent>({
     APPLY_EASING_FUNCTION: {
       target: 'debouncing',
       actions: assign((context, event) => {
-        const {paletteId, curveId, easingFunction} = event
+        const {paletteId, curveId, easing} = event
         const curve = context.palettes[paletteId].curves[curveId]
-
         const startingPoint = curve.values[0]
         const endingPoint = curve.values[curve.values.length - 1]
 
-        if (startingPoint == null || endingPoint == null) return
+        curve.easing = easing
 
+        if (startingPoint == null || endingPoint == null || curve.values.length < 2) return
+
+        const easingFunction = createEasingFunction(easing.points)
         curve.values = curve.values.map((_, index) => {
           const t = index / (curve.values.length - 1)
           const newValue = lerp(startingPoint, endingPoint, easingFunction(t))

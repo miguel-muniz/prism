@@ -4,11 +4,20 @@ export type Color = {
   lightness: number // 0-100
 }
 
+export type BezierControlPoints = [number, number, number, number]
+
+export type CurveEasing = {
+  preset: string
+  variant?: string
+  points: BezierControlPoints
+}
+
 export type Curve = {
   id: string
   name: string
   type: 'hue' | 'saturation' | 'lightness'
   values: number[]
+  easing?: CurveEasing
 }
 
 export type Scale = {

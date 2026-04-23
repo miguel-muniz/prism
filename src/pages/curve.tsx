@@ -148,7 +148,8 @@ export function Curve() {
         </SidebarPanel>
         <Separator />
         <ApplyEasingFunction
-          onApply={easingFunction => send({type: 'APPLY_EASING_FUNCTION', paletteId, curveId, easingFunction})}
+          easing={curve.easing}
+          onApply={easing => send({type: 'APPLY_EASING_FUNCTION', paletteId, curveId, easing})}
         />
         <Separator />
         <SidebarPanel title="Values">
