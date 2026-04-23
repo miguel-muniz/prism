@@ -1,4 +1,3 @@
-import {Box} from '@primer/react'
 import {toHsla, toRgba} from 'color2k'
 import React from 'react'
 import {useGlobalState} from '../global-state'
@@ -7,6 +6,7 @@ import {Button} from './button'
 import {Input} from './input'
 import {SidebarPanel} from './sidebar-panel'
 import {VStack} from './stack'
+import {Box} from './ui'
 
 export function Color({paletteId = '', scaleId = '', index = ''}: {paletteId: string; scaleId: string; index: string}) {
   const [state, send] = useGlobalState()
@@ -129,7 +129,7 @@ export function Color({paletteId = '', scaleId = '', index = ''}: {paletteId: st
               type: 'DELETE_COLOR',
               paletteId,
               scaleId,
-              index: parseInt(index)
+              index: parseInt(index, 10)
             })
           }
           disabled={scale.colors.length === 1}

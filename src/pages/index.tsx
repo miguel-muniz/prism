@@ -1,14 +1,16 @@
-import {PlusIcon, TrashIcon} from '@primer/octicons-react'
-import {Box, Button, Heading, IconButton as PrimerIconButton, Text} from '@primer/react'
+import React from 'react'
 import {mix, readableColor} from 'color2k'
 import {Link} from 'react-router-dom'
-import {IconButton} from '../components/button'
+import {Button, IconButton} from '../components/button'
+import {PlusIcon, TrashIcon} from '../components/icons'
+import {Box, Heading, Text} from '../components/ui'
 import {routePrefix} from '../constants'
 import {useGlobalState} from '../global-state'
 import {colorToHex, getColor} from '../utils'
 
 export function Index() {
   const [state, send] = useGlobalState()
+
   return (
     <div>
       <Box
@@ -26,11 +28,12 @@ export function Index() {
           </Box>
         </Box>
         <Box sx={{display: 'flex', alignItems: 'center'}}>
-          <PrimerIconButton
+          <IconButton
             aria-label="Create new palette"
             icon={PlusIcon}
-            onClick={() => send('CREATE_PALETTE')}
-            sx={{margin: 0}}
+            onClick={() => {
+              send('CREATE_PALETTE')
+            }}
           />
         </Box>
       </Box>
@@ -52,14 +55,12 @@ export function Index() {
               <Box
                 as={Link}
                 to={`${routePrefix}/local/${palette.id}`}
-                p={3}
                 sx={{
+                  p: 3,
                   display: 'grid',
                   gap: 3,
                   textDecoration: 'none',
                   borderRadius: 2,
-                  // border: "1px solid",
-                  // borderColor: "border.default",
                   overflow: 'hidden',
                   color: readableColor(palette.backgroundColor),
                   backgroundColor: palette.backgroundColor,
@@ -93,6 +94,7 @@ export function Index() {
                       >
                         {scale.colors.map((_, index) => {
                           const color = getColor(palette.curves, scale, index)
+
                           return (
                             <Box
                               key={index}
@@ -125,30 +127,31 @@ export function Index() {
                 onClick={() => {
                   send({type: 'DELETE_PALETTE', paletteId: palette.id})
                 }}
-                sx={{
-                  '--color-text': readableColor(palette.backgroundColor),
-                  '--color-background': palette.backgroundColor,
-                  '--color-background-secondary': mix(
-                    readableColor(palette.backgroundColor),
-                    palette.backgroundColor,
-                    0.9
-                  ),
-                  '--color-background-secondary-hover': mix(
-                    readableColor(palette.backgroundColor),
-                    palette.backgroundColor,
-                    0.85
-                  ),
-                  '--color-border': mix(readableColor(palette.backgroundColor), palette.backgroundColor, 0.75),
-                  position: 'absolute',
-                  right: 3,
-                  bottom: '12px'
-                }}
+                style={
+                  {
+                    '--color-text': readableColor(palette.backgroundColor),
+                    '--color-background': palette.backgroundColor,
+                    '--color-background-secondary': mix(
+                      readableColor(palette.backgroundColor),
+                      palette.backgroundColor,
+                      0.9
+                    ),
+                    '--color-background-secondary-hover': mix(
+                      readableColor(palette.backgroundColor),
+                      palette.backgroundColor,
+                      0.85
+                    ),
+                    '--color-border': mix(readableColor(palette.backgroundColor), palette.backgroundColor, 0.75),
+                    position: 'absolute',
+                    right: 12,
+                    bottom: 12
+                  } as React.CSSProperties
+                }
               />
             </li>
           ))}
         </Box>
       </Box>
-      {/* Empty state */}
       {Object.keys(state.context.palettes).length === 0 ? (
         <Box
           sx={{
@@ -173,7 +176,13 @@ export function Index() {
             <Text sx={{marginBottom: 5, fontSize: 3, color: 'fg.muted'}}>
               Prism is a tool for creating cohesive, consistent, and accessible color palettes
             </Text>
-            <Button variant="primary" size="large" onClick={() => send('CREATE_PALETTE')}>
+            <Button
+              variant="primary"
+              size="large"
+              onClick={() => {
+                send('CREATE_PALETTE')
+              }}
+            >
               Create new palette
             </Button>
           </Box>

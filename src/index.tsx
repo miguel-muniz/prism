@@ -1,17 +1,20 @@
-import {ThemeProvider} from '@primer/react'
+import '@awesome.me/webawesome/dist/styles/webawesome.css'
 import React from 'react'
-import ReactDOM from 'react-dom'
+import {createRoot} from 'react-dom/client'
 import {App} from './app'
 import {GlobalStateProvider} from './global-state'
 import './index.css'
 
-ReactDOM.render(
+const rootElement = document.getElementById('root')
+
+if (!rootElement) {
+  throw new Error('Root element not found')
+}
+
+createRoot(rootElement).render(
   <React.StrictMode>
-    <ThemeProvider colorMode="auto">
-      <GlobalStateProvider>
-        <App />
-      </GlobalStateProvider>
-    </ThemeProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <GlobalStateProvider>
+      <App />
+    </GlobalStateProvider>
+  </React.StrictMode>
 )

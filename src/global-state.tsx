@@ -1,5 +1,4 @@
 import {assign} from '@xstate/immer'
-import {useInterpret, useService} from '@xstate/react'
 import bezier from 'bezier-easing'
 import {isArray, keyBy} from 'lodash-es'
 import React from 'react'
@@ -427,14 +426,22 @@ const machine = Machine<MachineContext, MachineEvent>({
   }
 })
 
-const GlobalStateContext = React.createContext<Interpreter<MachineContext, any, MachineEvent, any> | null>(null)
+const GlobalStateContext = React.createContext<any>(null)
 
 export function GlobalStateProvider({children}: React.PropsWithChildren<{}>) {
   const initialState = React.useMemo(() => getPersistedState() ?? machine.initialState, [])
+  const service = React.useMemo(() => interpret(machine, {devTools: true}).start(initialState), [initialState])
 
-  const service = useInterpret<MachineContext, MachineEvent>(machine, {state: initialState, devTools: true}, state => {
-    localStorage.setItem(GLOBAL_STATE_KEY, JSON.stringify(state))
-  })
+  React.useEffect(() => {
+    const subscription = service.subscribe(state => {
+      localStorage.setItem(GLOBAL_STATE_KEY, JSON.stringify(state))
+    })
+
+    return () => {
+      subscription.unsubscribe()
+      service.stop()
+    }
+  }, [service])
 
   return <GlobalStateContext.Provider value={service}>{children}</GlobalStateContext.Provider>
 }
@@ -446,7 +453,21 @@ export function useGlobalState() {
     throw new Error('useGlobalState must be used within a GlobalStateProvider')
   }
 
-  return useService<MachineContext, MachineEvent>(service)
+  const state = React.useSyncExternalStore(
+    onStoreChange => {
+      const subscription = service.subscribe(() => {
+        onStoreChange()
+      })
+
+      return () => {
+        subscription.unsubscribe()
+      }
+    },
+    () => service.getSnapshot(),
+    () => service.getSnapshot()
+  ) as typeof machine.initialState
+
+  return [state, service.send] as const
 }
 
 function getPersistedState(): typeof machine.initialState | null {

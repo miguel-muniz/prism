@@ -1,16 +1,16 @@
-import {CheckCircleFillIcon, DashIcon, PlusIcon, XCircleIcon} from '@primer/octicons-react'
-import {Box, ButtonGroup, Text} from '@primer/react'
 import {getContrast} from 'color2k'
 import React from 'react'
 import {Link, useNavigate, useParams} from 'react-router-dom'
-import {Button, IconButton} from '../components/button'
+import {Button, ButtonGroup, IconButton} from '../components/button'
 import {Color} from '../components/color'
 import {CurveEditor} from '../components/curve-editor'
+import {CheckCircleFillIcon, DashIcon, PlusIcon, XCircleIcon} from '../components/icons'
 import {Input} from '../components/input'
 import {Select} from '../components/select'
 import {Separator} from '../components/separator'
 import {SidebarPanel} from '../components/sidebar-panel'
 import {VStack, ZStack} from '../components/stack'
+import {Box, Text} from '../components/ui'
 import {routePrefix} from '../constants'
 import {useGlobalState} from '../global-state'
 import {Curve} from '../types'
@@ -78,9 +78,16 @@ export function Scale() {
                   aria-label={`Toggle ${type} curve visibility`}
                   aria-pressed={isVisible}
                   onClick={() => setVisibleCurves({...visibleCurves, [type]: !isVisible})}
-                  style={{
-                    background: isVisible ? 'var(--color-background-secondary)' : 'var(--color-background)'
-                  }}
+                  style={
+                    {
+                      '--button-background': isVisible
+                        ? 'var(--color-background-secondary)'
+                        : 'var(--color-background)',
+                      '--button-background-hover': isVisible
+                        ? 'var(--color-background-secondary-hover)'
+                        : 'var(--color-background-secondary)'
+                    } as React.CSSProperties
+                  }
                 >
                   {type[0].toUpperCase()}
                 </Button>
@@ -91,7 +98,9 @@ export function Scale() {
             <IconButton
               icon={DashIcon}
               aria-label="Remove color from end of scale"
-              onClick={() => send({type: 'POP_COLOR', paletteId, scaleId})}
+              onClick={() => {
+                send({type: 'POP_COLOR', paletteId, scaleId})
+              }}
               disabled={scale.colors.length === 1}
             />
             <IconButton
@@ -166,7 +175,13 @@ export function Scale() {
                   }}
                   onClick={() => setIndex(String(i))}
                 >
-                  <Box display="flex" alignItems="center" flexDirection="column">
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexDirection: 'column'
+                    }}
+                  >
                     <span
                       style={{
                         transform: 'rotate(180deg)',

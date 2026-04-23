@@ -96,7 +96,9 @@ export function Curve() {
         <CurveEditor
           values={curve.values}
           {...ranges[curve.type]}
-          onChange={values => send({type: 'CHANGE_CURVE_VALUES', paletteId, curveId, values})}
+          onChange={values => {
+            send({type: 'CHANGE_CURVE_VALUES', paletteId, curveId, values})
+          }}
           label={curve.type[0].toUpperCase()}
         />
       </ZStack>
@@ -148,7 +150,9 @@ export function Curve() {
         </SidebarPanel>
         <Separator />
         <ApplyEasingFunction
-          onApply={easingFunction => send({type: 'APPLY_EASING_FUNCTION', paletteId, curveId, easingFunction})}
+          onApply={easingFunction => {
+            send({type: 'APPLY_EASING_FUNCTION', paletteId, curveId, easingFunction})
+          }}
         />
         <Separator />
         <SidebarPanel title="Values">

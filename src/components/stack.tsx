@@ -1,36 +1,67 @@
-import styled from 'styled-components'
+import React from 'react'
 
-// TODO: add alignment prop
+type StackProps = React.HTMLAttributes<HTMLDivElement> & {
+  children?: React.ReactNode
+  spacing?: number | string
+}
 
-export const HStack = styled.div<{spacing?: number | string}>`
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  gap: ${props => px(props.spacing)};
-  align-items: center;
-`
+export function HStack({spacing, style, children, ...props}: StackProps) {
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridAutoFlow: 'column',
+        gridAutoColumns: 'max-content',
+        gap: px(spacing),
+        alignItems: 'center',
+        ...style
+      }}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
 
-export const VStack = styled.div<{spacing?: number | string}>`
-  display: grid;
-  grid-auto-flow: row;
-  grid-auto-rows: max-content;
-  gap: ${props => px(props.spacing)};
-  align-items: center;
-`
+export function VStack({spacing, style, children, ...props}: StackProps) {
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridAutoFlow: 'row',
+        gridAutoRows: 'max-content',
+        gap: px(spacing),
+        alignItems: 'center',
+        ...style
+      }}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
 
-export const ZStack = styled.div`
-  display: grid;
-  place-items: center;
+export function ZStack({style, children, ...props}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      style={{
+        display: 'grid',
+        placeItems: 'center',
+        ...style
+      }}
+      {...props}
+    >
+      {React.Children.map(children, child => (
+        <div style={{gridArea: '1 / 1', width: '100%', height: '100%'}}>{child}</div>
+      ))}
+    </div>
+  )
+}
 
-  & > * {
-    grid-area: 1 / 1;
-  }
-`
-
-export function px(value: any) {
+export function px(value: unknown): React.CSSProperties['gap'] {
   if (typeof value === 'number') {
     return `${value}px`
   }
 
-  return value
+  return value as React.CSSProperties['gap']
 }

@@ -1,8 +1,6 @@
-import {Box, Text} from '@primer/react'
 import {mix, readableColor} from 'color2k'
 import React from 'react'
-import {Link, Outlet, useNavigate, useParams} from 'react-router-dom'
-import styled from 'styled-components'
+import {Link, Navigate, Outlet, useNavigate, useParams} from 'react-router-dom'
 import {Button, IconButton} from '../components/button'
 import {ExportScales} from '../components/export-scales'
 import {ImportScales} from '../components/import-scales'
@@ -14,33 +12,7 @@ import {routePrefix} from '../constants'
 import {useGlobalState} from '../global-state'
 import {Color} from '../types'
 import {colorToHex, getColor} from '../utils'
-
-const Wrapper = styled.div<{backgroundColor: string}>`
-  --color-text: ${props => readableColor(props.backgroundColor)};
-  --color-background: ${props => props.backgroundColor};
-  --color-background-secondary: ${props => mix(readableColor(props.backgroundColor), props.backgroundColor, 0.9)};
-  --color-background-secondary-hover: ${props =>
-    mix(readableColor(props.backgroundColor), props.backgroundColor, 0.85)};
-  --color-border: ${props => mix(readableColor(props.backgroundColor), props.backgroundColor, 0.75)};
-
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  grid-template-rows: auto 1fr;
-  grid-template-areas: 'header header' 'sidebar main';
-  color: var(--color-text);
-  background-color: var(--color-background);
-  height: 100vh;
-`
-
-const Main = styled.main`
-  grid-area: main;
-  display: flex;
-  overflow: auto;
-
-  & > * {
-    flex-grow: 1;
-  }
-`
+import {Box, Text} from '../components/ui'
 
 export function Palette() {
   const navigate = useNavigate()
@@ -57,8 +29,23 @@ export function Palette() {
     )
   }
 
+  const wrapperStyle = {
+    '--color-text': readableColor(palette.backgroundColor),
+    '--color-background': palette.backgroundColor,
+    '--color-background-secondary': mix(readableColor(palette.backgroundColor), palette.backgroundColor, 0.9),
+    '--color-background-secondary-hover': mix(readableColor(palette.backgroundColor), palette.backgroundColor, 0.85),
+    '--color-border': mix(readableColor(palette.backgroundColor), palette.backgroundColor, 0.75),
+    display: 'grid',
+    gridTemplateColumns: '300px 1fr',
+    gridTemplateRows: 'auto 1fr',
+    gridTemplateAreas: "'header header' 'sidebar main'",
+    color: 'var(--color-text)',
+    backgroundColor: 'var(--color-background)',
+    height: '100vh'
+  } as React.CSSProperties
+
   return (
-    <Wrapper backgroundColor={palette.backgroundColor}>
+    <div style={wrapperStyle}>
       <header
         style={{
           gridArea: 'header',
@@ -105,7 +92,9 @@ export function Palette() {
                 />
               </svg>
             )}
-            onClick={() => send('UNDO')}
+            onClick={() => {
+              send('UNDO')
+            }}
             disabled={state.context.past.length === 0}
           >
             Undo
@@ -130,7 +119,9 @@ export function Palette() {
                 />
               </svg>
             )}
-            onClick={() => send('REDO')}
+            onClick={() => {
+              send('REDO')
+            }}
             disabled={state.context.future.length === 0}
           />
           {/* <input
@@ -153,7 +144,11 @@ export function Palette() {
               })
             }
           /> */}
-          <ImportScales onImport={(scales, replace) => send({type: 'IMPORT_SCALES', paletteId, scales, replace})} />
+          <ImportScales
+            onImport={(scales, replace) => {
+              send({type: 'IMPORT_SCALES', paletteId, scales, replace})
+            }}
+          />
           <ExportScales palette={palette} />
         </HStack>
       </header>
@@ -266,7 +261,12 @@ export function Palette() {
               </Link>
             ))}
           </VStack>
-          <Button style={{marginTop: 16, width: '100%'}} onClick={() => send({type: 'CREATE_SCALE', paletteId})}>
+          <Button
+            style={{marginTop: 16, width: '100%'}}
+            onClick={() => {
+              send({type: 'CREATE_SCALE', paletteId})
+            }}
+          >
             New scale
           </Button>
         </SidebarPanel>
@@ -336,9 +336,61 @@ export function Palette() {
           </VStack>
         </SidebarPanel>
       </div>
-      <Main>
-        <Outlet />
-      </Main>
-    </Wrapper>
+      <main
+        style={{
+          gridArea: 'main',
+          display: 'flex',
+          overflow: 'auto'
+        }}
+      >
+        <div style={{flexGrow: 1}}>
+          <Outlet />
+        </div>
+      </main>
+    </div>
+  )
+}
+
+export function PaletteIndex() {
+  const {paletteId = ''} = useParams<{paletteId: string}>()
+  const [state] = useGlobalState()
+  const palette = state.context.palettes[paletteId]
+
+  if (!palette) {
+    return null
+  }
+
+  const firstScale = Object.values(palette.scales)[0]
+
+  if (firstScale) {
+    return <Navigate replace to={`scale/${firstScale.id}`} />
+  }
+
+  const firstCurve = Object.values(palette.curves)[0]
+
+  if (firstCurve) {
+    return <Navigate replace to={`curve/${firstCurve.id}`} />
+  }
+
+  return (
+    <div
+      style={{
+        display: 'grid',
+        placeItems: 'center',
+        width: '100%',
+        minHeight: '100%'
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 420,
+          padding: 24,
+          textAlign: 'center'
+        }}
+      >
+        <h2 style={{margin: '0 0 8px'}}>This palette is empty</h2>
+        <p style={{margin: 0, color: 'var(--color-text)'}}>Create a scale from the sidebar to start editing it.</p>
+      </div>
+    </div>
   )
 }

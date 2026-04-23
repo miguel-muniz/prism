@@ -1,4 +1,5 @@
-import {Box, Text} from '@primer/react'
+import React from 'react'
+import {Box, Text} from './ui'
 
 export function SidebarPanel({title, children}: {title: string; children: React.ReactNode}) {
   return (

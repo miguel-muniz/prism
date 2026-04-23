@@ -1,38 +1,83 @@
-import {Button as PrimerButton, IconButton as PrimerIconButton} from '@primer/react'
-import styled from 'styled-components'
+import WaButton from '@awesome.me/webawesome/dist/react/button/index.js'
+import React from 'react'
 
-export const Button = styled(PrimerButton)`
-  color: var(--color-text);
-  background-color: var(--color-background-secondary);
-  border: 1px solid var(--color-border);
-  box-shadow: none;
-  margin: 0;
+type ButtonProps = {
+  children?: React.ReactNode
+  variant?: 'default' | 'primary'
+  size?: 'small' | 'medium' | 'large'
+  className?: string
+  style?: React.CSSProperties
+  disabled?: boolean
+  type?: 'button' | 'submit' | 'reset'
+  onClick?: React.MouseEventHandler<HTMLElement>
+}
 
-  &:not([disabled]):hover,
-  &:not([disabled]):active {
-    background-color: var(--color-background-secondary-hover);
-    border-color: var(--color-border);
-  }
+type IconButtonProps = Omit<ButtonProps, 'children' | 'variant'> & {
+  icon: React.ComponentType<{size?: number; className?: string}>
+  'aria-label': string
+  children?: React.ReactNode
+}
 
-  &[disabled] {
-    color: var(--color-text);
-    opacity: 0.5;
-  }
-`
+type ButtonGroupProps = {
+  children?: React.ReactNode
+  className?: string
+  style?: React.CSSProperties
+}
 
-export const IconButton = styled(PrimerIconButton)`
-  color: var(--color-text);
-  background-color: var(--color-background-secondary);
-  border: 1px solid var(--color-border);
-  box-shadow: none;
-  margin: 0;
+export function Button({
+  children,
+  variant = 'default',
+  size = 'medium',
+  className = '',
+  type = 'button',
+  ...props
+}: ButtonProps) {
+  return (
+    <WaButton
+      type={type}
+      size={size}
+      variant={variant === 'primary' ? 'brand' : 'neutral'}
+      appearance={variant === 'primary' ? 'accent' : 'filled-outlined'}
+      className={['app-button', variant === 'primary' ? 'app-button--primary' : '', className]
+        .filter(Boolean)
+        .join(' ')}
+      {...props}
+    >
+      {children}
+    </WaButton>
+  )
+}
 
-  &:not([disabled]):hover {
-    background-color: var(--color-background-secondary-hover);
-  }
+export function IconButton({
+  icon: Icon,
+  className = '',
+  style,
+  size = 'medium',
+  children: _children,
+  ...props
+}: IconButtonProps) {
+  return (
+    <WaButton
+      size={size}
+      variant="neutral"
+      appearance="filled-outlined"
+      className={['app-button', 'app-icon-button', className].filter(Boolean).join(' ')}
+      style={{
+        minWidth: 36,
+        width: 36,
+        ...style
+      }}
+      {...props}
+    >
+      <Icon className="app-icon-button__icon" />
+    </WaButton>
+  )
+}
 
-  &[disabled] {
-    color: var(--color-text);
-    opacity: 0.5;
-  }
-`
+export function ButtonGroup({children, className, style}: ButtonGroupProps) {
+  return (
+    <div className={['app-button-group', className].filter(Boolean).join(' ')} style={style}>
+      {children}
+    </div>
+  )
+}

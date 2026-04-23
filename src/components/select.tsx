@@ -1,14 +1,20 @@
-import styled from 'styled-components'
+import React from 'react'
 
-export const Select = styled.select`
-  height: 32px;
-  padding: 0 8px;
-  font-family: inherit;
-  font-size: 14px;
-  line-height: 32px;
-  border: 1px solid var(--color-border, gray);
-  border-radius: 6px;
-  color: var(--color-text);
-  background-color: var(--color-background);
-  margin: 0;
-`
+type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement>
+
+const baseStyle: React.CSSProperties = {
+  height: 32,
+  padding: '0 8px',
+  fontFamily: 'inherit',
+  fontSize: 14,
+  lineHeight: '32px',
+  border: '1px solid var(--color-border, gray)',
+  borderRadius: 6,
+  color: 'var(--color-text)',
+  backgroundColor: 'var(--color-background)',
+  margin: 0
+}
+
+export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(function Select({style, ...props}, ref) {
+  return <select ref={ref} style={{...baseStyle, ...style}} {...props} />
+})

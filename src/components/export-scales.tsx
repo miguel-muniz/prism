@@ -1,11 +1,11 @@
-import {Button as PrimerButton, Textarea} from '@primer/react'
-import {Dialog} from '@primer/react/lib-esm/Dialog/Dialog'
 import copy from 'copy-to-clipboard'
 import {camelCase} from 'lodash-es'
 import React from 'react'
 import {Palette} from '../types'
 import {colorToHex, getColor} from '../utils'
 import {Button} from './button'
+import {Dialog} from './dialog'
+import {Textarea} from './textarea'
 import {VStack} from './stack'
 
 type ExportScalesProps = {
@@ -34,7 +34,6 @@ export function ExportScales({palette}: ExportScalesProps) {
   )
 
   const code = React.useMemo(() => JSON.stringify(hexScales, null, 2), [hexScales])
-
   const svg = React.useMemo(() => generateSvg(hexScales), [hexScales])
 
   return (
@@ -48,8 +47,11 @@ export function ExportScales({palette}: ExportScalesProps) {
               rows={16}
               value={code}
               readOnly
-              resize="vertical"
-              sx={{fontFamily: 'mono'}}
+              style={{
+                width: '100%',
+                resize: 'vertical',
+                fontFamily: 'var(--font-mono)'
+              }}
             />
             <div
               style={{
@@ -58,8 +60,8 @@ export function ExportScales({palette}: ExportScalesProps) {
                 gap: 16
               }}
             >
-              <PrimerButton onClick={() => copy(code)}>Copy JSON</PrimerButton>
-              <PrimerButton onClick={() => copy(svg)}>Copy SVG</PrimerButton>
+              <Button onClick={() => copy(code)}>Copy JSON</Button>
+              <Button onClick={() => copy(svg)}>Copy SVG</Button>
             </div>
           </VStack>
         </Dialog>

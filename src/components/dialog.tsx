@@ -1,29 +1,38 @@
-import * as Dialog from '@radix-ui/react-dialog'
-import styled from 'styled-components'
+import WaDialog from '@awesome.me/webawesome/dist/react/dialog/index.js'
+import React from 'react'
 
-export {Root, Trigger, Close} from '@radix-ui/react-dialog'
+type DialogProps = {
+  title: string
+  onClose: () => void
+  children: React.ReactNode
+  width?: string
+}
 
-export const Overlay = styled(Dialog.Overlay)`
-  background-color: rgba(0, 0, 0, 0.15);
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-`
-
-export const Content = styled(Dialog.Content)`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  will-change: transform;
-  min-width: 400px;
-  max-width: fit-content;
-  max-height: 85vh;
-  margin-top: -5vh;
-  background-color: white;
-  border-radius: 6px;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
-  overflow: auto;
-`
+export function Dialog({title, onClose, children, width = 'min(42rem, calc(100vw - 2rem))'}: DialogProps) {
+  return (
+    <WaDialog
+      open
+      lightDismiss
+      label={title}
+      withoutHeader
+      onWaHide={() => onClose()}
+      className="app-dialog"
+      style={
+        {
+          '--width': width,
+          '--spacing': '0px'
+        } as React.CSSProperties
+      }
+    >
+      <div className="app-dialog__surface">
+        <div className="app-dialog__header">
+          <h2 className="app-dialog__title">{title}</h2>
+          <button type="button" className="app-dialog__close" onClick={onClose} aria-label={`Close ${title}`}>
+            <span aria-hidden="true">x</span>
+          </button>
+        </div>
+        <div className="app-dialog__body">{children}</div>
+      </div>
+    </WaDialog>
+  )
+}

@@ -1,3 +1,14 @@
+:root {
+  --app-surface: #f4f7fb;
+  --app-surface-raised: #ffffff;
+  --app-border: #d0d7e2;
+  --app-text: #18212f;
+  --app-muted: #5f6b7a;
+  --app-accent: #2066d6;
+  --app-accent-hover: #1a56b6;
+  --font-mono: "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
 *,
 *::before,
 *::after {
@@ -6,9 +17,116 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: "IBM Plex Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.5;
   box-sizing: border-box;
+  color: var(--app-text);
+  background-color: var(--app-surface);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+.app-button-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+wa-button.app-button::part(base) {
+  color: var(--color-text, var(--app-text));
+  background-color: var(--button-background, var(--color-background-secondary, var(--app-surface-raised)));
+  border: 1px solid var(--color-border, var(--app-border));
+  box-shadow: none;
+}
+
+wa-button.app-button::part(base):hover,
+wa-button.app-button::part(base):active {
+  background-color: var(--button-background-hover, var(--color-background-secondary-hover, #e8eef8));
+  border-color: var(--color-border, var(--app-border));
+}
+
+wa-button.app-button.app-button--primary::part(base) {
+  background-color: var(--app-accent);
+  border-color: var(--app-accent);
+  color: white;
+}
+
+wa-button.app-button.app-button--primary::part(base):hover,
+wa-button.app-button.app-button--primary::part(base):active {
+  background-color: var(--app-accent-hover);
+  border-color: var(--app-accent-hover);
+}
+
+wa-button.app-button.app-icon-button::part(base) {
+  width: 100%;
+  padding-inline: 0;
+}
+
+.app-icon-button__icon {
+  display: block;
+}
+
+wa-dialog.app-dialog::part(dialog) {
+  background: var(--color-background-secondary, var(--app-surface-raised));
+  color: var(--color-text, var(--app-text));
+  border: 1px solid var(--color-border, var(--app-border));
+  border-radius: 16px;
+  box-shadow: 0 28px 80px rgba(24, 33, 47, 0.2);
+}
+
+wa-dialog.app-dialog::part(body) {
+  padding: 0;
+}
+
+.app-dialog__surface {
+  display: grid;
+}
+
+.app-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 20px 0;
+}
+
+.app-dialog__title {
+  margin: 0;
+  font-size: 1.125rem;
+  line-height: 1.2;
+}
+
+.app-dialog__close {
+  border: 1px solid var(--color-border, var(--app-border));
+  background: var(--color-background, var(--app-surface));
+  color: inherit;
+  border-radius: 999px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.app-dialog__body {
+  padding: 20px;
+}
+
+.app-alert {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(193, 38, 57, 0.3);
+  color: #8a1d2c;
+  background: rgba(193, 38, 57, 0.08);
 }

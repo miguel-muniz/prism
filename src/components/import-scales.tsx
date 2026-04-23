@@ -1,12 +1,12 @@
-import {Button as PrimerButton, Flash, Textarea} from '@primer/react'
-import {Dialog} from '@primer/react/lib-esm/Dialog/Dialog'
 import {isArray, keyBy} from 'lodash-es'
 import React from 'react'
 import {v4 as uniqueId} from 'uuid'
 import {Scale} from '../types'
 import {hexToColor} from '../utils'
 import {Button} from './button'
+import {Dialog} from './dialog'
 import {HStack, VStack} from './stack'
+import {Textarea} from './textarea'
 
 const PLACEHOLDER = `{
   "gray": [
@@ -45,7 +45,6 @@ export function ImportScales({onImport}: ImportScalesProps) {
 
       onImport(keyBy(scales, 'id'), replace)
 
-      // Reset state
       setIsOpen(false)
       setCode('')
       setError('')
@@ -66,7 +65,11 @@ export function ImportScales({onImport}: ImportScalesProps) {
         <Dialog title="Import" onClose={() => setIsOpen(false)}>
           <form onSubmit={handleSubmit}>
             <VStack spacing={16}>
-              {error ? <Flash variant="danger">{error}</Flash> : null}
+              {error ? (
+                <div className="app-alert" role="alert">
+                  {error}
+                </div>
+              ) : null}
               <VStack spacing={4}>
                 <label htmlFor="code" style={{fontSize: 14}}>
                   Paste JSON
@@ -74,7 +77,7 @@ export function ImportScales({onImport}: ImportScalesProps) {
                 <Textarea
                   id="code"
                   rows={12}
-                  sx={{fontFamily: 'mono'}}
+                  style={{width: '100%', fontFamily: 'var(--font-mono)'}}
                   placeholder={PLACEHOLDER}
                   value={code}
                   onChange={event => setCode(event.target.value)}
@@ -91,7 +94,7 @@ export function ImportScales({onImport}: ImportScalesProps) {
                   Replace existing scales
                 </label>
               </HStack>
-              <PrimerButton>Import</PrimerButton>
+              <Button type="submit">Import</Button>
             </VStack>
           </form>
         </Dialog>
