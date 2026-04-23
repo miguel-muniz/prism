@@ -2,11 +2,18 @@ import {Box} from '@primer/react'
 import {toHsla, toRgba} from 'color2k'
 import React from 'react'
 import {useGlobalState} from '../global-state'
-import {colorToHex, getColor} from '../utils'
+import {colorToHex, formatLab, formatOklch, getColor} from '../utils'
 import {Button} from './button'
 import {Input} from './input'
 import {SidebarPanel} from './sidebar-panel'
 import {VStack} from './stack'
+
+const colorValueStyle = {
+  fontFamily: 'mono' as const,
+  fontSize: 1,
+  overflowWrap: 'anywhere' as const,
+  whiteSpace: 'pre-wrap' as const
+}
 
 export function Color({paletteId = '', scaleId = '', index = ''}: {paletteId: string; scaleId: string; index: string}) {
   const [state, send] = useGlobalState()
@@ -107,20 +114,28 @@ export function Color({paletteId = '', scaleId = '', index = ''}: {paletteId: st
           </VStack>
         </div>
 
-        <Box as="code" sx={{fontFamily: 'mono', fontSize: 1}}>
+        <Box as="code" sx={colorValueStyle}>
           hsluv({computedColor.hue}, {computedColor.saturation}%, {computedColor.lightness}%)
         </Box>
 
-        <Box as="code" sx={{fontFamily: 'mono', fontSize: 1}}>
+        <Box as="code" sx={colorValueStyle}>
           {hex}
         </Box>
 
-        <Box as="code" sx={{fontFamily: 'mono', fontSize: 1}}>
+        <Box as="code" sx={colorValueStyle}>
           {toRgba(hex)}
         </Box>
 
-        <Box as="code" sx={{fontFamily: 'mono', fontSize: 1}}>
+        <Box as="code" sx={colorValueStyle}>
           {toHsla(hex)}
+        </Box>
+
+        <Box as="code" sx={colorValueStyle}>
+          {formatLab(hex)}
+        </Box>
+
+        <Box as="code" sx={colorValueStyle}>
+          {formatOklch(hex)}
         </Box>
 
         <Button

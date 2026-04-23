@@ -8,6 +8,7 @@ https://prism-plus.netlify.app/
 
 - ADDED: Create palettes from preset color systems.
 - ADDED: Edit curve easing with a Bezier chart, point inputs, a CSS `cubic-bezier(...)` input, and per-curve saved easing settings.
+- ADDED: Show LAB and OKLCH color-space values in the color detail panel.
 - FIXED: LocalStorage quota issues caused by persisted undo/redo history.
 - FIXED: Offset input fields so system controls no longer enforce a minimum, allowing negative values.
 - FIXED: Project tooling for the current build and deployment workflow.
