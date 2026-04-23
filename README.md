@@ -1,28 +1,12 @@
-> **Note**: Primer Prism is not under active development.
-
 ![A screenshot of Primer Prism](https://user-images.githubusercontent.com/4608155/172450729-c88a40bc-3273-4aeb-83a4-2610a0c68ecc.png)
 
+# Prism+
 
-# Primer Prism
-
-
-Primer Prism is a tool for creating and maintaining cohesive, consistent, and accessible color palettes.
-
-- 🌈 [primer.style/prism](https://primer.style/prism)
-- 📝 [Read the blog post](https://github.blog/2022-06-14-accelerating-github-theme-creation-with-color-tooling/)
-
-
-> **Warning**
-> Primer Prism is experimental. Expect bugs and breaking changes. 
-
-
+Prism+ is a tool for creating and maintaining cohesive, consistent, and accessible color palettes.
 
 ## Run locally
 
 ```bash
-# Clone the project
-git clone git@github.com:primer/prism.git
-
 # Go to the project directory
 cd prism
 
@@ -36,10 +20,19 @@ npm install
 npm start
 ```
 
+## Changes in this repo
+
+- Updated the project tooling for the current build and deployment workflow.
+- Fixed the localStorage quota bug by no longer persisting undo/redo history.
+- Added the ability to create palettes from preset color systems.
+- Changed undo/redo history so it is session-only and cleared when the browser is closed.
+- Fixed offset input fields so system controls no longer enforce a minimum, allowing negative values.
+
 ## Prior art
 
 Primer Prism builds on the ideas in many existing color tools:
 
+- [Original Prism by GitHub](https://primer.style/prism)
 - [Palettte by Gabriel Adorf](https://palettte.app/)
 - [Huetone by Alexey Ardov](https://huetone.ardov.me/)
 - [ColorBox by Lyft](https://lyft-colorbox.herokuapp.com/)
@@ -47,4 +40,3 @@ Primer Prism builds on the ideas in many existing color tools:
 - [Leonardo by Adobe](https://leonardocolor.io/theme.html)
 - [Palx by Brent Jackson](https://palx.jxnblk.com/)
 - [Scale by Hayk An](https://hihayk.github.io/scale)
-

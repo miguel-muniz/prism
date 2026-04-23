@@ -7,7 +7,7 @@ import {navigate} from './navigation'
 import {v4 as uniqueId} from 'uuid'
 import {interpret, Interpreter, Machine} from 'xstate'
 import cssColorNames from './css-color-names.json'
-import exampleScales from './example-scales.json'
+import {PRESET_PALETTES} from './preset-palettes'
 import {Color, Curve, Palette, Scale} from './types'
 import {getColor, hexToColor, randomIntegerInRange, lerp} from './utils'
 import {routePrefix} from './constants'
@@ -23,6 +23,10 @@ type MachineContext = {
 type MachineEvent =
   | {
       type: 'CREATE_PALETTE'
+    }
+  | {
+      type: 'CREATE_PRESET_PALETTE'
+      presetId: string
     }
   | {
       type: 'DELETE_PALETTE'
@@ -134,6 +138,33 @@ type MachineEvent =
   | {type: 'UNDO'}
   | {type: 'REDO'}
 
+function createScales(scalesConfig: Record<string, string | string[]>): Record<string, Scale> {
+  const scales: Scale[] = Object.entries(scalesConfig).map(([name, scale]) => {
+    const id = uniqueId()
+    const scaleArray = isArray(scale) ? scale : [scale]
+    return {id, name, colors: scaleArray.map(hexToColor), curves: {}}
+  })
+
+  return keyBy(scales, 'id') as Record<string, Scale>
+}
+
+function createPalette(
+  context: MachineContext,
+  options: {name: string; backgroundColor: string; scales: Record<string, string | string[]>}
+) {
+  const paletteId = uniqueId()
+
+  context.palettes[paletteId] = {
+    id: paletteId,
+    name: options.name,
+    backgroundColor: options.backgroundColor,
+    scales: createScales(options.scales),
+    curves: {}
+  }
+
+  navigate(`${routePrefix}/local/${paletteId}`)
+}
+
 const machine = Machine<MachineContext, MachineEvent>({
   id: 'global-state',
   context: {
@@ -169,21 +200,27 @@ const machine = Machine<MachineContext, MachineEvent>({
     },
     CREATE_PALETTE: {
       actions: assign(context => {
-        const paletteId = uniqueId()
-        const scales: Scale[] = Object.entries(exampleScales).map(([name, scale]) => {
-          const id = uniqueId()
-          const scaleArray = isArray(scale) ? scale : [scale]
-          return {id, name, colors: scaleArray.map(hexToColor), curves: {}}
-        })
-        context.palettes[paletteId] = {
-          id: paletteId,
+        createPalette(context, {
           name: 'Untitled',
           backgroundColor: '#ffffff',
-          scales: keyBy(scales, 'id'),
-          curves: {}
-        }
+          scales: {
+            black: '#000000',
+            white: '#ffffff'
+          }
+        })
+      })
+    },
+    CREATE_PRESET_PALETTE: {
+      actions: assign((context, event) => {
+        const preset = PRESET_PALETTES[event.presetId]
 
-        navigate(`${routePrefix}/local/${paletteId}`)
+        if (!preset) return
+
+        createPalette(context, {
+          name: preset.name,
+          backgroundColor: preset.backgroundColor,
+          scales: preset.scales
+        })
       })
     },
     DELETE_PALETTE: {

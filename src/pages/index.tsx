@@ -1,7 +1,8 @@
-import {PlusIcon, TrashIcon} from '@primer/octicons-react'
-import {Box, Button, Heading, IconButton as PrimerIconButton, Text} from '@primer/react'
+import {TrashIcon} from '@primer/octicons-react'
+import {Box, Heading, Text} from '@primer/react'
 import {mix, readableColor} from 'color2k'
 import {Link} from 'react-router-dom'
+import {AddPaletteSplitButton} from '../components/add-palette-split-button'
 import {IconButton} from '../components/button'
 import {routePrefix} from '../constants'
 import {useGlobalState} from '../global-state'
@@ -26,11 +27,9 @@ export function Index() {
           </Box>
         </Box>
         <Box sx={{display: 'flex', alignItems: 'center'}}>
-          <PrimerIconButton
-            aria-label="Create new palette"
-            icon={PlusIcon}
-            onClick={() => send('CREATE_PALETTE')}
-            sx={{margin: 0}}
+          <AddPaletteSplitButton
+            onAddPalette={() => send('CREATE_PALETTE')}
+            onAddPresetPalette={presetId => send({type: 'CREATE_PRESET_PALETTE', presetId})}
           />
         </Box>
       </Box>
@@ -173,9 +172,11 @@ export function Index() {
             <Text sx={{marginBottom: 5, fontSize: 3, color: 'fg.muted'}}>
               Prism is a tool for creating cohesive, consistent, and accessible color palettes
             </Text>
-            <Button variant="primary" size="large" onClick={() => send('CREATE_PALETTE')}>
-              Create new palette
-            </Button>
+            <AddPaletteSplitButton
+              size="large"
+              onAddPalette={() => send('CREATE_PALETTE')}
+              onAddPresetPalette={presetId => send({type: 'CREATE_PRESET_PALETTE', presetId})}
+            />
           </Box>
         </Box>
       ) : null}
