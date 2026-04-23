@@ -22,9 +22,11 @@ type ApplyEasingFunctionProps = {
 }
 
 const presetKeys = Object.keys(easingPoints) as EasingCurveKey[]
-const chart = {x: 22, y: 16, width: 208, height: 112}
+const controlPointXRange = {min: 0, max: 1}
+const controlPointYRange = {min: -0.5, max: 1.5}
+const chart = {x: 22, y: 72, width: 208, height: 112}
 const chartWidth = 252
-const chartHeight = 152
+const chartHeight = 248
 const panelStackStyle: React.CSSProperties = {alignItems: 'stretch', width: '100%', minWidth: 0}
 const fullWidthControlStyle: React.CSSProperties = {
   boxSizing: 'border-box',
@@ -99,7 +101,10 @@ export function ApplyEasingFunction({easing, onApply}: ApplyEasingFunctionProps)
 
     const nextPoints = [...points] as BezierControlPoints
     const pointOffset = pointIndex * 2 + (coordinate === 'x' ? 0 : 1)
-    nextPoints[pointOffset] = clamp(value, 0, 1)
+    nextPoints[pointOffset] =
+      coordinate === 'x'
+        ? clamp(value, controlPointXRange.min, controlPointXRange.max)
+        : clamp(value, controlPointYRange.min, controlPointYRange.max)
     updateCustomPoints(nextPoints)
   }
 
@@ -407,8 +412,8 @@ function PointInputs({pointIndex, points, onChange}: PointInputsProps) {
       <Input
         id={xInputId}
         type="number"
-        min={0}
-        max={1}
+        min={controlPointXRange.min}
+        max={controlPointXRange.max}
         step={0.001}
         value={xValue}
         style={fullWidthControlStyle}
@@ -421,8 +426,8 @@ function PointInputs({pointIndex, points, onChange}: PointInputsProps) {
       <Input
         id={yInputId}
         type="number"
-        min={0}
-        max={1}
+        min={controlPointYRange.min}
+        max={controlPointYRange.max}
         step={0.001}
         value={yValue}
         style={fullWidthControlStyle}
@@ -485,8 +490,8 @@ function clientPointToBezierPoint(svg: SVGSVGElement, clientX: number, clientY: 
   const rect = svg.getBoundingClientRect()
   const svgX = ((clientX - rect.left) / rect.width) * chartWidth
   const svgY = ((clientY - rect.top) / rect.height) * chartHeight
-  const x = clamp((svgX - chart.x) / chart.width, 0, 1)
-  const y = clamp(1 - (svgY - chart.y) / chart.height, 0, 1)
+  const x = clamp((svgX - chart.x) / chart.width, controlPointXRange.min, controlPointXRange.max)
+  const y = clamp(1 - (svgY - chart.y) / chart.height, controlPointYRange.min, controlPointYRange.max)
 
   return [round(x), round(y)]
 }
@@ -512,7 +517,12 @@ function parseBezier(value: string): BezierControlPoints | undefined {
 
   if (values.some(value => !Number.isFinite(value))) return undefined
 
-  return values.map(value => round(clamp(value, 0, 1))) as BezierControlPoints
+  return [
+    round(clamp(values[0], controlPointXRange.min, controlPointXRange.max)),
+    round(clamp(values[1], controlPointYRange.min, controlPointYRange.max)),
+    round(clamp(values[2], controlPointXRange.min, controlPointXRange.max)),
+    round(clamp(values[3], controlPointYRange.min, controlPointYRange.max))
+  ]
 }
 
 function getDefaultVariant(preset: string, preferredVariant?: string): Easing | undefined {
