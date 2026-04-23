@@ -18,13 +18,14 @@ import {VStack} from './stack'
 
 type ApplyEasingFunctionProps = {
   easing?: CurveEasing
-  onApply: (easing: CurveEasing) => void
+  onApply: (easing?: CurveEasing) => void
 }
 
+const noneEasingPreset = 'none'
 const presetKeys = Object.keys(easingPoints) as EasingCurveKey[]
 const controlPointXRange = {min: 0, max: 1}
-const controlPointYRange = {min: -0.5, max: 1.5}
-const chart = {x: 22, y: 72, width: 208, height: 112}
+const controlPointYRange = {min: -1, max: 2}
+const chart = {x: 0, y: 72, width: 252, height: 112}
 const chartWidth = 252
 const chartHeight = 248
 const panelStackStyle: React.CSSProperties = {alignItems: 'stretch', width: '100%', minWidth: 0}
@@ -70,6 +71,13 @@ export function ApplyEasingFunction({easing, onApply}: ApplyEasingFunctionProps)
   }
 
   function changePreset(nextPreset: string) {
+    if (nextPreset === noneEasingPreset) {
+      setPreset(noneEasingPreset)
+      setVariant('')
+      updatePoints(points)
+      return
+    }
+
     if (nextPreset === customEasingPreset) {
       setPreset(customEasingPreset)
       setVariant('')
@@ -122,6 +130,11 @@ export function ApplyEasingFunction({easing, onApply}: ApplyEasingFunctionProps)
   function applyEasingFunction() {
     if (!isCssValid) return
 
+    if (preset === noneEasingPreset) {
+      onApply(undefined)
+      return
+    }
+
     onApply({
       preset,
       variant: preset === customEasingPreset || !variant ? undefined : variant,
@@ -143,6 +156,7 @@ export function ApplyEasingFunction({easing, onApply}: ApplyEasingFunctionProps)
             style={fullWidthControlStyle}
             onChange={event => changePreset(event.target.value)}
           >
+            <option value={noneEasingPreset}>None</option>
             {presetKeys.map(key => (
               <option value={key} key={key}>
                 {formatPresetLabel(key)}
@@ -176,19 +190,9 @@ export function ApplyEasingFunction({easing, onApply}: ApplyEasingFunctionProps)
           </Select>
         </VStack>
 
-        <BezierCurveChart
-          points={points}
-          onChange={(pointIndex, nextPoint) => changeBezierPoint(points, pointIndex, nextPoint, updateCustomPoints)}
-        />
-
-        <VStack spacing={8} style={panelStackStyle}>
-          <PointInputs pointIndex={0} points={points} onChange={changePoint} />
-          <PointInputs pointIndex={1} points={points} onChange={changePoint} />
-        </VStack>
-
         <VStack spacing={4} style={panelStackStyle}>
           <label htmlFor="css-bezier" style={{fontSize: 14}}>
-            CSS cubic-bezier
+            Bezier Curve
           </label>
           <Input
             id="css-bezier"
@@ -205,6 +209,16 @@ export function ApplyEasingFunction({easing, onApply}: ApplyEasingFunctionProps)
               Use cubic-bezier(x1, y1, x2, y2).
             </span>
           ) : null}
+        </VStack>
+
+        <BezierCurveChart
+          points={points}
+          onChange={(pointIndex, nextPoint) => changeBezierPoint(points, pointIndex, nextPoint, updateCustomPoints)}
+        />
+
+        <VStack spacing={8} style={panelStackStyle}>
+          <PointInputs pointIndex={0} points={points} onChange={changePoint} />
+          <PointInputs pointIndex={1} points={points} onChange={changePoint} />
         </VStack>
 
         <Button onClick={applyEasingFunction} disabled={!isCssValid} style={fullWidthControlStyle}>
@@ -257,7 +271,7 @@ function BezierCurveChart({points, onChange}: BezierCurveChartProps) {
       width="100%"
       height={chartHeight}
       fill="none"
-      style={{display: 'block', maxWidth: '100%', touchAction: 'none'}}
+      style={{display: 'block', maxWidth: '100%', overflow: 'visible', touchAction: 'none'}}
       onPointerMove={event => {
         if (dragging == null) return
 
@@ -440,7 +454,10 @@ function PointInputs({pointIndex, points, onChange}: PointInputsProps) {
 
 function normalizeEasing(easing?: CurveEasing): CurveEasing {
   if (!easing) {
-    return copyEasing(defaultCurveEasing)
+    return {
+      preset: noneEasingPreset,
+      points: copyPoints(defaultCurveEasing.points)
+    }
   }
 
   const preset =
@@ -549,6 +566,7 @@ function formatNumber(value: number) {
 }
 
 function formatPresetLabel(key: string) {
+  if (key === noneEasingPreset) return 'None'
   return key === customEasingPreset ? 'Custom' : capitalize(key)
 }
 

@@ -133,7 +133,7 @@ type MachineEvent =
       type: 'APPLY_EASING_FUNCTION'
       paletteId: string
       curveId: string
-      easing: CurveEasing
+      easing?: CurveEasing
     }
   | {type: 'UNDO'}
   | {type: 'REDO'}
@@ -406,13 +406,17 @@ const machine = Machine<MachineContext, MachineEvent>({
     CHANGE_CURVE_VALUE: {
       target: 'debouncing',
       actions: assign((context, event) => {
-        context.palettes[event.paletteId].curves[event.curveId].values[event.index] = event.value
+        const curve = context.palettes[event.paletteId].curves[event.curveId]
+        curve.values[event.index] = event.value
+        curve.easing = undefined
       })
     },
     CHANGE_CURVE_VALUES: {
       target: 'debouncing',
       actions: assign((context, event) => {
-        context.palettes[event.paletteId].curves[event.curveId].values = event.values
+        const curve = context.palettes[event.paletteId].curves[event.curveId]
+        curve.values = event.values
+        curve.easing = undefined
       })
     },
     CHANGE_SCALE_COLORS: {
@@ -431,7 +435,7 @@ const machine = Machine<MachineContext, MachineEvent>({
 
         curve.easing = easing
 
-        if (startingPoint == null || endingPoint == null || curve.values.length < 2) return
+        if (!easing || startingPoint == null || endingPoint == null || curve.values.length < 2) return
 
         const easingFunction = createEasingFunction(easing.points)
         curve.values = curve.values.map((_, index) => {
