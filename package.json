@@ -46,7 +46,7 @@
     "start": "vite",
     "dev": "vite",
     "build:preview": "tsc --noEmit && vite build",
-    "build": "tsc --noEmit && vite build --base=/prism/",
+    "build": "tsc --noEmit && vite build --base=/",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
