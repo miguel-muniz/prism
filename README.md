@@ -4,9 +4,21 @@
 
 Prism+ is a tool for creating and maintaining cohesive, consistent, and accessible color palettes.
 
+https://prism-plus.netlify.app/
+
+## Changes from Primer Prism
+
+- Updated the project tooling for the current build and deployment workflow.
+- Fixed the localStorage quota bug by no longer persisting undo/redo history.
+- Added the ability to create palettes from preset color systems.
+- Fixed offset input fields so system controls no longer enforce a minimum, allowing negative values.
+
 ## Run locally
 
 ```bash
+# Clone the project
+git clone https://github.com/miguel-muniz/prism.git
+
 # Go to the project directory
 cd prism
 
@@ -19,13 +31,6 @@ npm install
 # Start the development server
 npm start
 ```
-
-## Changes from Primer Prism
-
-- Updated the project tooling for the current build and deployment workflow.
-- Fixed the localStorage quota bug by no longer persisting undo/redo history.
-- Added the ability to create palettes from preset color systems.
-- Fixed offset input fields so system controls no longer enforce a minimum, allowing negative values.
 
 ## Prior art
 
