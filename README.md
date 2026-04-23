@@ -20,19 +20,18 @@ npm install
 npm start
 ```
 
-## Changes in this repo
+## Changes from Primer Prism
 
 - Updated the project tooling for the current build and deployment workflow.
 - Fixed the localStorage quota bug by no longer persisting undo/redo history.
 - Added the ability to create palettes from preset color systems.
-- Changed undo/redo history so it is session-only and cleared when the browser is closed.
 - Fixed offset input fields so system controls no longer enforce a minimum, allowing negative values.
 
 ## Prior art
 
-Primer Prism builds on the ideas in many existing color tools:
+Prism+ builds on the ideas in many existing color tools:
 
-- [Original Prism by GitHub](https://primer.style/prism)
+- [Primer Prism by GitHub](https://primer.style/prism)
 - [Palettte by Gabriel Adorf](https://palettte.app/)
 - [Huetone by Alexey Ardov](https://huetone.ardov.me/)
 - [ColorBox by Lyft](https://lyft-colorbox.herokuapp.com/)
