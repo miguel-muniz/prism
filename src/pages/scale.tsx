@@ -14,7 +14,7 @@ import {VStack, ZStack} from '../components/stack'
 import {routePrefix} from '../constants'
 import {useGlobalState} from '../global-state'
 import {Curve} from '../types'
-import {colorToHex, getColor, getContrastScore, getRange} from '../utils'
+import {colorToHex, getColor, getContrastScore, getRange, roundColorValue} from '../utils'
 
 export function Scale() {
   const navigate = useNavigate()
@@ -217,7 +217,7 @@ export function Scale() {
                         type: 'CHANGE_CURVE_VALUES',
                         paletteId,
                         curveId: scale.curves[type] ?? '',
-                        values: values.map((value, index) => value - scale.colors[index][type])
+                        values: values.map((value, index) => roundColorValue(value - scale.colors[index][type]))
                       })
                     } else {
                       send({
@@ -226,7 +226,9 @@ export function Scale() {
                         scaleId,
                         colors: scale.colors.map((color, index) => ({
                           ...color,
-                          [type]: values[index] - (palette.curves[scale.curves[type] ?? '']?.values[index] ?? 0)
+                          [type]: roundColorValue(
+                            values[index] - (palette.curves[scale.curves[type] ?? '']?.values[index] ?? 0)
+                          )
                         }))
                       })
                     }

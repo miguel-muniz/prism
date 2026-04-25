@@ -23,6 +23,10 @@ export function colorToHex(color: Color): string {
   return hsluv.hsluvToHex([color.hue, color.saturation, color.lightness])
 }
 
+export function roundColorValue(value: number) {
+  return Math.round(value * 1000) / 1000
+}
+
 export function hexToLab(hex: string): LabColor {
   const {red, green, blue} = hexToLinearSrgb(hex)
   const d65X = 0.4124564 * red + 0.3575761 * green + 0.1804375 * blue
@@ -77,9 +81,9 @@ export function getColor(curves: Record<string, Curve>, scale: Scale, index: num
   const saturationCurve = curves[scale.curves.saturation ?? '']?.values ?? []
   const lightnessCurve = curves[scale.curves.lightness ?? '']?.values ?? []
 
-  const hue = color.hue + (hueCurve[index] ?? 0)
-  const saturation = color.saturation + (saturationCurve[index] ?? 0)
-  const lightness = color.lightness + (lightnessCurve[index] ?? 0)
+  const hue = clamp(roundColorValue(color.hue + (hueCurve[index] ?? 0)), 0, 360)
+  const saturation = clamp(roundColorValue(color.saturation + (saturationCurve[index] ?? 0)), 0, 100)
+  const lightness = clamp(roundColorValue(color.lightness + (lightnessCurve[index] ?? 0)), 0, 100)
 
   return {hue, saturation, lightness}
 }
@@ -130,5 +134,9 @@ function normalizeHue(hue: number) {
 }
 
 function formatColorNumber(value: number) {
-  return (Math.round(value * 1000) / 1000).toString()
+  return roundColorValue(value).toString()
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max)
 }
